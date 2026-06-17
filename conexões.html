@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conexões</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bungee+Shade&family=Caveat:wght@700&family=Chewy&family=Fredoka:wght@600&family=Luckiest+Guy&family=Pacifico&family=Permanent+Marker&family=Rubik+Bubbles&family=Shrikhand&family=Sigmar+One&family=Titan+One&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface2: #eeede9;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1a1a18;
+    --text-muted: #6b6a65;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #252523;
+      --surface2: #2e2e2c;
+      --border: rgba(255,255,255,0.1);
+      --border-strong: rgba(255,255,255,0.22);
+      --text: #f0efe9;
+      --text-muted: #9e9d97;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  #game {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  header p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .tile-word {
+    display: inline-block;
+    line-height: 1.1;
+  }
+
+  .ws-1 { font-family: 'Bangers', cursive; font-size: 22px; letter-spacing: 0.5px; transform: rotate(-3deg); }
+  .ws-2 { font-family: 'Pacifico', cursive; font-size: 17px; transform: rotate(2deg); }
+  .ws-3 { font-family: 'Luckiest Guy', cursive; font-size: 17px; transform: rotate(-1deg); -webkit-text-stroke: 0.5px rgba(0,0,0,0.15); }
+  .ws-4 { font-family: 'Permanent Marker', cursive; font-size: 18px; transform: rotate(3deg); }
+  .ws-5 { font-family: 'Caveat', cursive; font-weight: 700; font-size: 26px; transform: rotate(-2deg); }
+  .ws-6 { font-family: 'Titan One', cursive; font-size: 16px; transform: rotate(1deg); }
+  .ws-7 { font-family: 'Shrikhand', cursive; font-size: 17px; transform: rotate(-2deg); }
+  .ws-8 { font-family: 'Chewy', cursive; font-size: 17px; transform: rotate(2deg); }
+  .ws-9 { font-family: 'Sigmar One', cursive; font-size: 16px; transform: rotate(-1deg); }
+  .ws-10 { font-family: 'Bungee Shade', cursive; font-size: 14px; transform: rotate(1deg); }
+  .ws-11 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; transform: rotate(-1deg); }
+  .ws-12 { font-family: 'Rubik Bubbles', cursive; font-size: 16px; transform: rotate(2deg); }
+
+  .word-c1 { color: #FF5C8A; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c2 { color: #6C5CE7; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c3 { color: #00B894; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c4 { color: #FDCB36; text-shadow: 1px 1px 0 rgba(0,0,0,0.25); }
+  .word-c5 { color: #00CEC9; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c6 { color: #E17055; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c7 { color: #0984E3; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c8 { color: #D63031; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c9 { color: #00A86B; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c10 { color: #A29BFE; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c11 { color: #FF7675; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c12 { color: #FAB1A0; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c13 { color: #74B9FF; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c14 { color: #55EFC4; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c15 { color: #FF9F43; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+  .word-c16 { color: #FD79A8; text-shadow: 1px 1px 0 rgba(0,0,0,0.18); }
+
+  .tile.selected .tile-word { color: #EEEDFE !important; text-shadow: 1px 1px 0 rgba(0,0,0,0.3) !important; -webkit-text-stroke: 0 !important; }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .topbar-left { display: flex; gap: 14px; align-items: center; }
+
+#btn-hint {
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btn-hint img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    display: block;
+}
+
+  #solved-area { margin-bottom: 8px; }
+
+  .solved-row {
+    border-radius: var(--radius-lg);
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    animation: pop 0.35s ease;
+  }
+
+  .solved-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .solved-words {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .tile {
+    aspect-ratio: 1 / 0.8;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    line-height: 1.25;
+    transition: transform 0.1s, border-color 0.15s, background 0.15s, color 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tile:hover { transform: scale(1.04); border-color: var(--border-strong); }
+  .tile:active { transform: scale(0.97); }
+
+  .tile.selected {
+    background: #3C3489;
+    color: #EEEDFE;
+    border-color: #3C3489;
+  }
+
+  .tile.wrong { animation: shake 0.4s ease; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-7px); }
+    40%,80% { transform: translateX(7px); }
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.96); opacity: 0; }
+    60% { transform: scale(1.03); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  #msg {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 22px;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    transition: opacity 0.2s;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .actions button {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border-strong);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-family: inherit;
+  }
+
+  .actions button:hover { background: var(--surface2); }
+  .actions button:active { transform: scale(0.97); }
+
+  #btn-submit {
+    background: var(--text) !important;
+    color: var(--bg) !important;
+    border-color: var(--text) !important;
+  }
+
+  #btn-submit:hover { opacity: 0.85; }
+
+  .result-banner {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    margin-top: 1rem;
+    animation: fadein 0.4s ease;
+  }
+
+  .result-banner h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .result-banner p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .result-banner button {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border-strong);
+    background: var(--text);
+    color: var(--bg);
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+
+  .result-banner button:hover { opacity: 0.8; }
+</style>
+</head>
+<body>
+<div id="game">
+  <header>
+    <h1>Conexões</h1>
+    <p>Encontre grupos de 4 palavras relacionadas</p>
+  </header>
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <span id="date-display"></span>
+      <span id="attempts-display"></span>
+    </div>
+   <button id="btn-hint" title="Dica">
+    <img src="clippy.png" alt="Clippy">
+</button>
+  </div>
+
+  <div id="solved-area"></div>
+  <div class="grid" id="grid"></div>
+  <div id="msg"></div>
+
+  <div class="actions" id="actions">
+    <button id="btn-shuffle">Embaralhar</button>
+    <button id="btn-deselect">Limpar</button>
+    <button id="btn-submit">Enviar</button>
+  </div>
+</div>
+
+<script>
+const GROUPS = [
+  {
+    label: "Casca de...",
+    words: ["OVO", "BANANA", "BALA", "FERIDA"],
+    fill: "#EEEDFE", fillDark: "#3C3489",
+    stroke: "#534AB7",
+    textColor: "#3C3489", textDark: "#CECBF6"
+  },
+  {
+    label: "Coisas que têm coroa",
+    words: ["DENTE", "MOEDA", "REI", "ABACAXI"],
+    fill: "#EAF3DE", fillDark: "#3B6D11",
+    stroke: "#639922",
+    textColor: "#3B6D11", textDark: "#C0DD97"
+  },
+  {
+    label: "Vampiro fica longe de...",
+    words: ["ALHO", "CRUZ", "ESTACA", "PRATA"],
+    fill: "#FBEAF0", fillDark: "#993556",
+    stroke: "#D4537E",
+    textColor: "#993556", textDark: "#F4C0D1"
+  },
+  {
+    label: "Peixe...",
+    words: ["LEÃO", "PALHAÇO", "LUA", "ESPADA"],
+    fill: "#FAEEDA", fillDark: "#854F0B",
+    stroke: "#BA7517",
+    textColor: "#854F0B", textDark: "#FAC775"
+  }
+];
+
+const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+function renderDate() {
+  const el = document.getElementById('date-display');
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const yyyy = now.getFullYear();
+  el.textContent = `${dd}/${mm}/${yyyy}`;
+}
+
+let hintsUsed = 0;
+let revealedHintWord = null;
+
+function useHint() {
+  if (gameOver) return;
+  const remaining = GROUPS.filter(g => !solvedGroups.includes(g));
+  if (remaining.length === 0) return;
+  const target = remaining[Math.floor(Math.random() * remaining.length)];
+  const candidateWords = target.words.filter(w => allWords.includes(w));
+  if (candidateWords.length === 0) return;
+  const word = candidateWords[Math.floor(Math.random() * candidateWords.length)];
+  revealedHintWord = word;
+  hintsUsed++;
+  setMsg(`Dica: "${word}" pertence ao grupo "${target.label}"`);
+  renderGrid();
+}
+
+let allWords = [];
+let selected = [];
+let attempts = 0;
+let solvedGroups = [];
+let gameOver = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderAttempts() {
+  const el = document.getElementById('attempts-display');
+  el.textContent = attempts === 0 ? 'Tentativas: 0' : `Tentativas: ${attempts}`;
+}
+
+function setMsg(text) {
+  const el = document.getElementById('msg');
+  el.style.opacity = '0';
+  setTimeout(() => { el.textContent = text; el.style.opacity = '1'; }, 100);
+}
+
+function renderSolved() {
+  const area = document.getElementById('solved-area');
+  area.innerHTML = '';
+  solvedGroups.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'solved-row';
+    div.style.background = dark ? g.fillDark : g.fill;
+    div.style.border = `2px solid ${g.stroke}`;
+    div.innerHTML = `<div class="solved-label" style="color:${dark ? g.textDark : g.textColor}">${g.label}</div>
+      <div class="solved-words" style="color:${dark ? g.textDark : g.textColor}">${g.words.join(' · ')}</div>`;
+    area.appendChild(div);
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  allWords.forEach(word => {
+    const tile = document.createElement('div');
+    tile.className = 'tile' + (selected.includes(word) ? ' selected' : '');
+    if (word === revealedHintWord) tile.style.boxShadow = '0 0 0 2px #FFD93D inset';
+    tile.dataset.word = word;
+    tile.textContent = word;
+    tile.addEventListener('click', () => toggleSelect(word));
+    grid.appendChild(tile);
+  });
+}
+
+function toggleSelect(word) {
+  if (gameOver) return;
+  if (selected.includes(word)) {
+    selected = selected.filter(w => w !== word);
+  } else {
+    if (selected.length >= 4) return;
+    selected.push(word);
+  }
+  renderGrid();
+  setMsg(selected.length === 4 ? 'Pronto! Clique em Enviar.' : '');
+}
+
+function submit() {
+  if (selected.length !== 4 || gameOver) return;
+  const group = GROUPS.find(g => !solvedGroups.includes(g) && g.words.every(w => selected.includes(w)));
+
+  if (group) {
+    solvedGroups.push(group);
+    allWords = allWords.filter(w => !group.words.includes(w));
+    selected = [];
+    if (group.words.includes(revealedHintWord)) revealedHintWord = null;
+    renderSolved();
+    renderGrid();
+    setMsg('Correto! 🎉');
+    if (solvedGroups.length === GROUPS.length) setTimeout(() => endGame(true), 400);
+  } else {
+    const oneAway = GROUPS.find(g => !solvedGroups.includes(g) && g.words.filter(w => selected.includes(w)).length === 3);
+    attempts++;
+    renderAttempts();
+    const tiles = [...document.querySelectorAll('.tile')].filter(t => selected.includes(t.dataset.word));
+    tiles.forEach(t => { t.classList.add('wrong'); setTimeout(() => t.classList.remove('wrong'), 450); });
+    setMsg(oneAway ? 'Quase! Você está a um de distância...' : 'Errou! Tente outra combinação.');
+    selected = [];
+    setTimeout(() => {
+      renderGrid();
+    }, 500);
+  }
+}
+
+function endGame(won) {
+  gameOver = true;
+  document.getElementById('grid').innerHTML = '';
+  document.getElementById('actions').style.display = 'none';
+  document.getElementById('btn-hint').disabled = true;
+  setMsg('');
+
+  const banner = document.createElement('div');
+  banner.className = 'result-banner';
+  banner.innerHTML = `<h2>Parabéns! 🎊</h2><p>Você encontrou todos os 4 grupos em ${attempts} tentativa${attempts === 1 ? '' : 's'} errada${attempts === 1 ? '' : 's'}!</p><button onclick="initGame()">Jogar novamente</button>`;
+  document.getElementById('game').appendChild(banner);
+}
+
+function initGame() {
+  attempts = 0;
+  solvedGroups = [];
+  selected = [];
+  gameOver = false;
+  hintsUsed = 0;
+  revealedHintWord = null;
+  allWords = shuffle(GROUPS.flatMap(g => g.words));
+  const banner = document.querySelector('.result-banner');
+  if (banner) banner.remove();
+  document.getElementById('actions').style.display = 'flex';
+  document.getElementById('btn-hint').disabled = false;
+  renderDate();
+  renderAttempts();
+  renderSolved();
+  renderGrid();
+  setMsg('');
+}
+
+document.getElementById('btn-shuffle').addEventListener('click', () => {
+  if (gameOver) return;
+  allWords = shuffle(allWords);
+  renderGrid();
+});
+document.getElementById('btn-deselect').addEventListener('click', () => {
+  selected = [];
+  renderGrid();
+  setMsg('');
+});
+document.getElementById('btn-submit').addEventListener('click', submit);
+document.getElementById('btn-hint').addEventListener('click', useHint);
+
+initGame();
+</script>
+</body>
+</html>
